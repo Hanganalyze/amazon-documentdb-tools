@@ -42,7 +42,7 @@ The tool prints one JSON document:
 
 ## Notes
 - Run the tool on each shard of a sharded cluster. Each shard has its own oplog and its own rate.
-- Run `HOURLY=1` at the end of the busiest day, so that the busiest hours are still in the oplog.
+- Run `HOURLY=1` soon after the busiest period ends. The mode sees only the hours that are still in the oplog, so a run later than one oplog window after the peak misses it. If the oplog window is short, use `SAMPLE_MINUTES` during the peak.
 - Choose `TARGET_HOURS` from the expected full load duration plus a margin for CDC catch-up and for the time to notice and fix a problem.
 - To change the oplog size, run `replSetResizeOplog` on every member of the replica set (https://www.mongodb.com/docs/manual/reference/command/replSetResizeOplog/). Make sure that the disk has space for the new size.
 - A minimum retention period (`minRetentionHours`, or `storage.oplogMinRetentionHours` in the configuration file) keeps entries for that number of hours. With it, the oplog can grow past its maximum size, so monitor disk space.
